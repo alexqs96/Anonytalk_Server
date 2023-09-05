@@ -6,7 +6,6 @@ import { Server } from 'socket.io';
 const app = express();
 const server = http.createServer(app);
 const port = process.env.PORT || 3770;
-const CHAT_BOT = '';
 
 app.use(cors());
 
@@ -35,7 +34,6 @@ io.on("connection", (socket) => {
   console.log("Un nuevo usuario se conecto: "+socket.id);
   //Join to Rooms
   socket.on("join_room", (data) => {
-
     //takes the nick and room id from the login page and joins the user to the room
     let [nick, roomid] = data;
     socket.join(roomid);
@@ -44,9 +42,10 @@ io.on("connection", (socket) => {
     socket.to(roomid).emit('receive_message', {
       room: roomid,
       images: [],
-      author: CHAT_BOT,
+      author: "",
       message: `${nick} se unio al chat.`,
-      time: ''
+      time: '',
+      color: "#334155"
     });
 
     io.to(roomid).emit("room_clients", getSizeRoom(roomid));
@@ -67,10 +66,11 @@ io.on("connection", (socket) => {
 
     socket.to(room).emit('receive_message', {
       room: room,
-      author: CHAT_BOT,
+      author: "",
       images: [],
       message: `${nick} salio del chat.`,
-      time: ''
+      time: '',
+      color: '#334155'
     });
 
     io.to(room).emit("room_clients", getSizeRoom(room));
